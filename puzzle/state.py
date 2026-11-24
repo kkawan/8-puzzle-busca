@@ -11,7 +11,7 @@ class State:
     def __init__(self, tiles: Tuple[int, ...], parent: Optional["State"] = None, action: Optional[str] = None, cost: int = 0):
         if len(tiles) != 9 or set(tiles) != set(range(9)):
             raise ValueError("Estado inválido: deve conter exatamente os valores 0-8.")
-        self.tiles = tiles
+        self.tiles = tuple(tiles)
         self.parent = parent
         self.action = action
         self.cost = cost
@@ -26,18 +26,34 @@ class State:
 
     def neighbors(self) -> List["State"]:
         """Retorna os estados filhos válidos a partir deste estado."""
-        # TODO: implemente a geração de estados filhos
-        raise NotImplementedError
+        blank = self.blank_index
+        row, col = divmod(blank, 3)
+        moves = ((-1, 0, "UP"), (1, 0, "DOWN"), (0, -1, "LEFT"), (0, 1, "RIGHT"))
+        children = []
+
+        for dr, dc, action in moves:
+            new_row, new_col = row + dr, col + dc
+            if 0 <= new_row < 3 and 0 <= new_col < 3:
+                position = new_row * 3 + new_col
+                tiles = list(self.tiles)
+                tiles[blank], tiles[position] = tiles[position], tiles[blank]
+                children.append(State(tuple(tiles), self, action, self.cost + 1))
+
+        return children
 
     def path(self) -> List["State"]:
         """Retorna a sequência de estados do estado inicial até este."""
-        # TODO: implemente a reconstrução do caminho usando self.parent
-        raise NotImplementedError
+        states = []
+        current = self
+        while current is not None:
+            states.append(current)
+            current = current.parent
+        states.reverse()
+        return states
 
     def actions(self) -> List[str]:
         """Retorna a sequência de ações do estado inicial até este."""
-        # TODO: implemente usando path()
-        raise NotImplementedError
+        return [state.action for state in self.path()[1:] if state.action is not None]
 
     def __eq__(self, other: object) -> bool:
         return isinstance(other, State) and self.tiles == other.tiles

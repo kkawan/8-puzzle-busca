@@ -1,33 +1,30 @@
 # 8-Puzzle — Busca em Espaço de Estados
 
-## O que implementar
+## Como executar
 
-### `puzzle/state.py`
-- `neighbors()` — gera os estados filhos a partir do espaço vazio
-- `path()` — reconstrói a sequência de estados do inicial até este
-- `actions()` — retorna a sequência de ações usando `path()`
+Com Python 3.10 ou mais recente, rode na raiz do projeto:
 
-### `algorithms/bfs.py`
-- `BFS.search(initial)` — Busca em Largura
+```bash
+python main.py
+```
 
-### `algorithms/dfs.py`
-- `DFS.search(initial)` — Busca em Profundidade
+O programa resolve o mesmo tabuleiro com os três algoritmos e mostra os movimentos, o custo e as métricas da busca. Os movimentos indicam a direção do espaço vazio: `UP`, `DOWN`, `LEFT` e `RIGHT`.
 
-### `algorithms/a_star.py`
-- `AStar.heuristic(state)` — função heurística admissível
-- `AStar.search(initial)` — Busca A*
+- **BFS:** usa uma fila para explorar os estados por camada e encontra um caminho de custo mínimo.
+- **DFS:** usa uma pilha e explora até um limite de profundidade (50 por padrão). A primeira solução pode não ser a mais curta.
+- **A\*:** prioriza a soma entre o custo já percorrido e a distância Manhattan das peças até suas posições finais, sem contar o espaço vazio.
 
 ## Estrutura
 
 ```
 ├── puzzle/
-│   ├── state.py        # State — IMPLEMENTAR neighbors, path, actions
-│   ├── result.py       # SearchResult — não alterar
-│   └── base_search.py  # Interface BaseSearch — não alterar
+│   ├── state.py        # movimentos e reconstrução do caminho
+│   ├── result.py       # resultado da busca
+│   └── base_search.py  # interface dos algoritmos
 ├── algorithms/
-│   ├── bfs.py          ← IMPLEMENTAR
-│   ├── dfs.py          ← IMPLEMENTAR
-│   └── a_star.py       ← IMPLEMENTAR
+│   ├── bfs.py
+│   ├── dfs.py
+│   └── a_star.py
 └── main.py
 ```
 
